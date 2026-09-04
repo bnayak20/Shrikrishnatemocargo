@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 import json
 import os
+import requests
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent
 
@@ -27,7 +26,7 @@ def clean(value, limit=1000):
     return str(value or "").strip()[:limit]
 
 
-def send_quote(data):
+def send_quote(data, site_url):
     required = ("from_name", "phone", "pickup", "destination", "cargo_details", "service_type")
     values = {key: clean(data.get(key)) for key in required}
     if any(not values[key] for key in required):
@@ -49,21 +48,23 @@ def send_quote(data):
         "_template": "table",
         "_replyto": values["email"],
     }
-    request = Request(
-        f"https://formsubmit.co/ajax/{recipient}",
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json", "Accept": "application/json"},
-        method="POST",
-    )
     try:
-        with urlopen(request, timeout=20) as response:
-            result = json.loads(response.read().decode("utf-8"))
-            if not result.get("success"):
-                raise RuntimeError(result.get("message", "Email service rejected the request."))
-    except HTTPError as error:
-        detail = error.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"Email service returned HTTP {error.code}: {detail[:200]}") from error
-    except URLError as error:
+        response = requests.post(
+            f"https://formsubmit.co/ajax/{recipient}",
+            json=payload,
+            headers={
+                "Accept": "application/json",
+                "Origin": site_url,
+                "Referer": f"{site_url}/",
+                "User-Agent": "Shri-Krishna-Temo-Cargo/1.0",
+            },
+            timeout=20,
+        )
+        result = response.json()
+        success = str(result.get("success", "false")).lower() == "true"
+        if not response.ok or not success:
+            raise RuntimeError(result.get("message", "Email service rejected the request."))
+    except requests.RequestException as error:
         raise RuntimeError("Could not connect to the email service.") from error
 
 
@@ -77,10 +78,16 @@ class Handler(SimpleHTTPRequestHandler):
             if length > 100_000:
                 raise ValueError("Request is too large.")
             data = json.loads(self.rfile.read(length) or b"{}")
-            send_quote(data)
+            protocol = self.headers.get("X-Forwarded-Proto", "http").split(",")[0].strip()
+            host = self.headers.get("X-Forwarded-Host") or self.headers.get("Host", "localhost")
+            site_url = f"{protocol}://{host}"
+            send_quote(data, site_url)
             self.respond(200, {"success": True, "message": "Quote request sent."})
         except ValueError as error:
             self.respond(400, {"success": False, "message": str(error)})
+        except RuntimeError as error:
+            print(f"Email service: {error}")
+            self.respond(502, {"success": False, "message": str(error)})
         except Exception as error:
             print(f"Email error: {type(error).__name__}: {error}")
             self.respond(500, {"success": False, "message": "Email could not be sent."})
