@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: shri-krishna-temo-cargo
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 server.py
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_APP_PASSWORD
+        sync: false
+      - key: QUOTE_RECIPIENT
+        sync: false
+      - key: QUOTE_CC
+        sync: false
+
