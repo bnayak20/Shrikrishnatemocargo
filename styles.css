@@ -31,3 +31,15 @@ html{scroll-padding-top:118px}
   .nav.open nav a{padding:15px 18px;background:#f5f7f8;border-left:3px solid transparent}
   .nav.open nav a:hover,.nav.open nav a.is-active{color:var(--navy);background:#fff4eb;border-left-color:var(--orange);box-shadow:none}
 }
+
+/* Separate rounded navigation pills */
+.nav nav{gap:8px;padding:0;background:transparent;border:0;border-radius:0}
+.nav nav a{min-width:82px;padding:10px 16px;text-align:center;background:#f4f6f7;border:1px solid #e4e9ec;border-radius:999px}
+.nav nav a:hover{background:#fff4eb;color:var(--orange);border-color:#ffc99f;box-shadow:0 5px 16px rgba(244,122,32,.13)}
+.nav nav a.is-active{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 6px 18px rgba(244,122,32,.26)}
+@media(max-width:800px){
+  .nav.open nav{gap:10px;padding:18px;background:#fff}
+  .nav.open nav a{padding:14px 20px;background:#f5f7f8;border:1px solid #e4e9ec;border-radius:999px;text-align:left}
+  .nav.open nav a:hover{background:#fff4eb;border-color:#ffc99f}
+  .nav.open nav a.is-active{background:var(--orange);color:#fff;border-color:var(--orange)}
+}
