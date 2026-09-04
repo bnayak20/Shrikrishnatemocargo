@@ -14,3 +14,9 @@
 .quote-status.is-success{color:#176b3a;background:#eaf8f0;border-color:#2ba862}
 .quote-status.is-error{color:#a43030;background:#fff0f0;border-color:#d84b4b}
 .form-actions .btn:disabled{opacity:.68;cursor:wait;transform:none}
+
+/* Frozen top header */
+html{scroll-padding-top:118px}
+.topbar{position:sticky;top:0;z-index:31}
+.nav{position:sticky;top:34px;z-index:30}
+@media(max-width:800px){.topbar{height:34px;padding:0}.nav{top:34px}}
