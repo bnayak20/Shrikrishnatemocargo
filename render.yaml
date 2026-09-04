@@ -8,16 +8,5 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.8
-      - key: SMTP_HOST
-        sync: false
-      - key: SMTP_PORT
-        sync: false
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_APP_PASSWORD
-        sync: false
       - key: QUOTE_RECIPIENT
-        sync: false
-      - key: QUOTE_CC
-        sync: false
-
+        value: krishnatemo931@gmail.com
