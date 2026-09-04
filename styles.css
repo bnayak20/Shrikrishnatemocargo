@@ -20,3 +20,14 @@ html{scroll-padding-top:118px}
 .topbar{position:sticky;top:0;z-index:31}
 .nav{position:sticky;top:34px;z-index:30}
 @media(max-width:800px){.topbar{height:34px;padding:0}.nav{top:34px}}
+
+/* Segmented navigation module */
+.nav nav{gap:3px;padding:4px;background:#f2f4f5;border:1px solid #e7ebee;border-radius:6px}
+.nav nav a{padding:10px 15px;border-radius:3px;color:#42505d;transition:background .2s,color .2s,box-shadow .2s}
+.nav nav a:after{display:none}
+.nav nav a:hover,.nav nav a.is-active{background:#fff;color:var(--orange);box-shadow:0 3px 12px rgba(8,26,44,.09)}
+@media(max-width:800px){
+  .nav.open nav{gap:8px;padding:16px;background:#fff;border:0;border-top:1px solid #e7ebee;border-radius:0}
+  .nav.open nav a{padding:15px 18px;background:#f5f7f8;border-left:3px solid transparent}
+  .nav.open nav a:hover,.nav.open nav a.is-active{color:var(--navy);background:#fff4eb;border-left-color:var(--orange);box-shadow:none}
+}
