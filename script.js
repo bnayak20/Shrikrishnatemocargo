@@ -46,7 +46,9 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
     try {
       if (window.location.protocol === 'file:') throw new Error('SERVER_REQUIRED');
-      const response = await fetch('/api/quote', {
+      payload._subject = `New Quote: ${payload.pickup} to ${payload.destination} — ${payload.from_name}`;
+      payload._template = 'table';
+      const response = await fetch('https://formsubmit.co/ajax/krishnatemo931@gmail.com', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
         body: JSON.stringify(payload)
